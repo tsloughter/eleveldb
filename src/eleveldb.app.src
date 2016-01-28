@@ -1,6 +1,6 @@
 {application, eleveldb,
  [
-  {description, ""},
+  {description, "Erlang LevelDB API"},
   {vsn, git},
   {registered, []},
   {applications, [
@@ -17,5 +17,8 @@
 
          %% Use bloom filter support by default
          {use_bloomfilter, true}
-        ]}
- ]}.
+        ]},
+
+ {licenses, ["Apache 2.0"]},
+ {links, [{"Github","https://github.com/basho/eleveldb"}]}
+]}.
