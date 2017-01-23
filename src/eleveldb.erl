@@ -111,7 +111,7 @@ init() ->
 
 -type read_options() :: [read_option()].
 
--type fold_option()  :: {first_key, Key::binary()}.
+-type fold_option()  :: {first_key, Key::binary() | first}.
 -type fold_options() :: [read_option() | fold_option()].
 
 -type write_options() :: [{sync, boolean()}].
@@ -178,21 +178,21 @@ async_put(Ref, Context, Key, Value, Opts) ->
 async_write(_CallerRef, _Ref, _Updates, _Opts) ->
     erlang:nif_error({error, not_loaded}).
 
--spec async_iterator(reference(), db_ref(), read_options()) -> ok.
+-spec async_iterator(reference(), db_ref(), fold_options()) -> ok.
 async_iterator(_CallerRef, _Ref, _Opts) ->
     erlang:nif_error({error, not_loaded}).
 
--spec async_iterator(reference(), db_ref(), read_options(), keys_only) -> ok.
+-spec async_iterator(reference(), db_ref(), fold_options(), keys_only) -> ok.
 async_iterator(_CallerRef, _Ref, _Opts, keys_only) ->
     erlang:nif_error({error, not_loaded}).
 
--spec iterator(db_ref(), read_options()) -> {ok, itr_ref()}.
+-spec iterator(db_ref(), fold_options()) -> {ok, itr_ref()}.
 iterator(Ref, Opts) ->
     CallerRef = make_ref(),
     async_iterator(CallerRef, Ref, Opts),
     ?WAIT_FOR_REPLY(CallerRef).
 
--spec iterator(db_ref(), read_options(), keys_only) -> {ok, itr_ref()}.
+-spec iterator(db_ref(), fold_options(), keys_only) -> {ok, itr_ref()}.
 iterator(Ref, Opts, keys_only) ->
     CallerRef = make_ref(),
     async_iterator(CallerRef, Ref, Opts, keys_only),
@@ -243,7 +243,7 @@ fold(Ref, Fun, Acc0, Opts) ->
 
 %% Fold over the keys in the database
 %% will throw an exception if the database is closed while the fold runs
--spec fold_keys(db_ref(), fold_keys_fun(), any(), read_options()) -> any().
+-spec fold_keys(db_ref(), fold_keys_fun(), any(), fold_options()) -> any().
 fold_keys(Ref, Fun, Acc0, Opts) ->
     {ok, Itr} = iterator(Ref, Opts, keys_only),
     do_fold(Itr, Fun, Acc0, Opts).
@@ -351,6 +351,7 @@ add_open_defaults(Opts) ->
     end.
 
 
+-spec do_fold(itr_ref(), fold_fun(), any(), fold_options()) -> any().
 do_fold(Itr, Fun, Acc0, Opts) ->
     try
         %% Extract {first_key, binary()} and seek to that key as a starting
