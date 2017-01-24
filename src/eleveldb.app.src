@@ -1,24 +1,8 @@
-{application, eleveldb,
- [
-  {description, "Erlang LevelDB API"},
-  {vsn, "2.2.19"},
-  {registered, []},
-  {applications, [
-                  kernel,
-                  stdlib
-                 ]},
-  {env, [
-         %% what percent of total memory should go to
-         %%  leveldb.  Default is 15% on the basis of
-         %%  a single development machine running 5
-         %%  Riak instances would therefore claim 75%.
-         %% REAL users will want this at 70%.
-         {total_leveldb_mem_percent, 15},
-
-         %% Use bloom filter support by default
-         {use_bloomfilter, true}
-        ]},
-
- {licenses, ["Apache 2.0"]},
- {links, [{"Github","https://github.com/basho/eleveldb"}]}
-]}.
+{application,eleveldb,
+             [{description,"Erlang LevelDB API"},
+              {vsn,"2.2.20"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {env,[{total_leveldb_mem_percent,15},{use_bloomfilter,true}]},
+              {licenses,["Apache 2.0"]},
+              {links,[{"Github","https://github.com/basho/eleveldb"}]}]}.
