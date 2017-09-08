@@ -61,6 +61,7 @@ case "$1" in
             if [ "$BASHO_EE" = "1" ]; then
                 (cd leveldb && git submodule update --init)
             fi
+            (cd leveldb; patch -p1 < ../arm64.patch)
         fi
         ;;
 
